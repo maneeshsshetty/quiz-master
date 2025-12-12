@@ -151,3 +151,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' # Use 64-bit integers for I
 # Auth Redirects
 LOGIN_URL = 'login' # If anonymous user hits a protected page, go here.
 LOGIN_REDIRECT_URL = 'dashboard' # After successful login, go here.
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

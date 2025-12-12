@@ -124,6 +124,7 @@ nav {
     font-weight: 800;
     font-size: 1.5rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.025em;
@@ -630,4 +631,68 @@ footer {
 .status-missed {
     background-color: var(--warning);
     color: white;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--surface);
+    min-width: 180px;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-sm);
+    z-index: 100;
+    border: 1px solid var(--border);
+    top: 100%;
+    right: 0;
+    padding: 0.5rem 0;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--text-main);
+    padding: 0.75rem 1.25rem;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--surface-hover);
+    color: var(--primary);
+}
+
+/* Table Enhancements */
+table th {
+    background-color: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border);
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+.table-center {
+    text-align: center;
+}
+
+/* Dashboard Specifics */
+.quiz-card .card-header {
+    background: transparent;
+    border-bottom: none;
 }

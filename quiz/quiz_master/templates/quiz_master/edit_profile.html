@@ -7,37 +7,61 @@
             <h2 class="card-title">Edit Profile</h2>
         </div>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+
+
+            <!-- Profile Picture Section -->
+            <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+                <div style="position: relative;">
+                    <img src="{{ user.userprofile.image.url }}" alt="Profile Picture"
+                        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); box-shadow: var(--shadow);">
+                </div>
+                <div style="flex: 1;">
+                    <label for="{{ p_form.image.id_for_label }}" class="btn btn-secondary btn-sm"
+                        style="cursor: pointer;">
+                        Change Picture
+                        <input type="file" name="image" accept="image/*" id="{{ p_form.image.id_for_label }}"
+                            style="display: none;"
+                            onchange="document.getElementById('file-name').textContent = this.files[0].name">
+                    </label>
+                    <span id="file-name" style="margin-left: 1rem; color: var(--text-muted); font-size: 0.9rem;"></span>
+                    {% if p_form.image.errors %}
+                    <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">
+                        {{ p_form.image.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
 
             <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0;">
                 <div class="form-group">
-                    <label for="{{ form.first_name.id_for_label }}">First Name</label>
-                    {{ form.first_name }}
-                    {% if form.first_name.errors %}
+                    <label for="{{ u_form.first_name.id_for_label }}">First Name</label>
+                    {{ u_form.first_name }}
+                    {% if u_form.first_name.errors %}
                     <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">
-                        {{ form.first_name.errors.0 }}
+                        {{ u_form.first_name.errors.0 }}
                     </div>
                     {% endif %}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-                    {{ form.last_name }}
-                    {% if form.last_name.errors %}
+                    <label for="{{ u_form.last_name.id_for_label }}">Last Name</label>
+                    {{ u_form.last_name }}
+                    {% if u_form.last_name.errors %}
                     <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">
-                        {{ form.last_name.errors.0 }}
+                        {{ u_form.last_name.errors.0 }}
                     </div>
                     {% endif %}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.email.id_for_label }}">Email Address</label>
-                {{ form.email }}
-                {% if form.email.errors %}
+                <label for="{{ u_form.email.id_for_label }}">Email Address</label>
+                {{ u_form.email }}
+                {% if u_form.email.errors %}
                 <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">
-                    {{ form.email.errors.0 }}
+                    {{ u_form.email.errors.0 }}
                 </div>
                 {% endif %}
             </div>
