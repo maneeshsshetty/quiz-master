@@ -5,34 +5,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz App</title>
+    <title>Quiz Master</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'quiz_master/css/style.css' %}">
 </head>
 
 <body>
     <nav>
         <div class="nav-content">
-            <div class="nav-brand">Quiz Master</div>
+            <a href="{% url 'dashboard' %}" class="nav-brand">
+                Quiz Master
+            </a>
             <div class="nav-links">
-                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'dashboard' %}"
+                    class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+
                 {% if user.is_superuser %}
-                <a href="{% url 'admin_create_user' %}">Create User</a>
-                <a href="{% url 'admin_results' %}">All Results</a>
-                <a href="{% url 'admin_leaderboard' %}">Leaderboard</a>
-                <a href="/admin/">Django Admin</a>
+                <a href="{% url 'admin_create_user' %}"
+                    class="{% if request.resolver_match.url_name == 'admin_create_user' %}active{% endif %}">Create
+                    User</a>
+                <a href="{% url 'admin_results' %}"
+                    class="{% if request.resolver_match.url_name == 'admin_results' %}active{% endif %}">Results</a>
+                <a href="{% url 'admin_leaderboard' %}"
+                    class="{% if request.resolver_match.url_name == 'admin_leaderboard' %}active{% endif %}">Leaderboard</a>
+                <a href="/admin/">Admin Panel</a>
                 {% endif %}
+
                 {% if user.is_authenticated %}
-                <a href="{% url 'edit_profile' %}" style="font-weight: 500; text-decoration: none; color: inherit;">
-                    {% if user.is_authenticated %}{{ user.username }}{% else %}Wait, not auth?{% endif %}
-                </a>
-                <form action="{% url 'logout' %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-secondary"
-                        style="padding: 0.5rem 1rem; font-size: 0.875rem;">Logout</button>
-                </form>
+                <div style="margin-left: 1rem; display: flex; align-items: center; gap: 1rem;">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-secondary btn-sm"
+                        style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                        <span style="font-size: 1.2em;">👤</span> {{ user.username }}
+                    </a>
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">Logout</button>
+                    </form>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -40,16 +51,24 @@
 
     <div class="container">
         {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
+        <div style="margin-top: 1rem;">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         {% endif %}
 
         {% block content %}
         {% endblock %}
     </div>
+
+    <footer>
+        <div class="container" style="padding: 0;">
+            <p>&copy; {% now "Y" %} Quiz Master. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

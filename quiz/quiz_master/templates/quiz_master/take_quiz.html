@@ -1,15 +1,16 @@
 {% extends 'quiz_master/base.html' %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
-    <div class="card"
-        style="margin-bottom: 2rem; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center;">
+<div class="quiz-container">
+    <div class="quiz-header">
         <div>
-            <h2 style="margin-bottom: 0.5rem;">{{ quiz.title }}</h2>
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">{{ quiz.title }}</h2>
             <p style="color: var(--text-muted);">{{ quiz.description }}</p>
         </div>
-        <div id="timer"
-            style="background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 999px; font-weight: 700; font-size: 1.1rem; box-shadow: var(--shadow);">
+        <div class="timer" id="timer">
+            <span
+                style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 0.25rem;">Time
+                Remaining</span>
             <span id="time-display">--:--</span>
         </div>
     </div>
@@ -19,34 +20,35 @@
         {% for question in quiz.questions.all %}
         <div class="card question-card">
             <div class="question-text">
-                <span style="color: var(--primary); margin-right: 0.5rem;">Q{{ forloop.counter }}.</span>
+                <span style="color: var(--primary); margin-right: 0.5rem;">{{ forloop.counter }}.</span>
                 {{ question.text }}
             </div>
             <div class="options-list">
                 <label class="option-item">
-                    <input type="radio" name="{{ question.id }}" value="A" required>
+                    <input type="radio" name="{{ question.id }}" value="A" required onchange="highlightOption(this)">
                     <span>{{ question.option_a }}</span>
                 </label>
                 <label class="option-item">
-                    <input type="radio" name="{{ question.id }}" value="B">
+                    <input type="radio" name="{{ question.id }}" value="B" onchange="highlightOption(this)">
                     <span>{{ question.option_b }}</span>
                 </label>
                 <label class="option-item">
-                    <input type="radio" name="{{ question.id }}" value="C">
+                    <input type="radio" name="{{ question.id }}" value="C" onchange="highlightOption(this)">
                     <span>{{ question.option_c }}</span>
                 </label>
                 <label class="option-item">
-                    <input type="radio" name="{{ question.id }}" value="D">
+                    <input type="radio" name="{{ question.id }}" value="D" onchange="highlightOption(this)">
                     <span>{{ question.option_d }}</span>
                 </label>
             </div>
         </div>
         {% endfor %}
 
-        <div
-            style="position: sticky; bottom: 2rem; background: var(--surface); padding: 1rem; border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--border); display: flex; justify-content: flex-end;">
-            <button type="submit" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;">Submit
-                Quiz</button>
+        <div style="position: sticky; bottom: 2rem; display: flex; justify-content: flex-end; pointer-events: none;">
+            <button type="submit" class="btn btn-primary"
+                style="padding: 1rem 3rem; font-size: 1.1rem; pointer-events: auto; box-shadow: var(--shadow-lg);">
+                Submit Quiz
+            </button>
         </div>
     </form>
 </div>
@@ -54,6 +56,7 @@
 <script>
     let timeLeft = parseInt("{{ time_left|stringformat:'d' }}");
     const timerDisplay = document.getElementById('time-display');
+    const timerBox = document.getElementById('timer');
     const form = document.getElementById('quiz-form');
 
     function updateTimer() {
@@ -68,11 +71,33 @@
 
         // Visual warning when time is low (less than 1 minute)
         if (timeLeft < 60) {
-            document.getElementById('timer').style.backgroundColor = 'var(--error)';
+            timerBox.style.color = 'var(--error)';
+            timerDisplay.style.animation = 'pulse 1s infinite';
         }
 
         timeLeft--;
     }
+
+    function highlightOption(radio) {
+        // Remove selected class from all options in this question
+        const optionsList = radio.closest('.options-list');
+        optionsList.querySelectorAll('.option-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        // Add selected class to the parent label of the checked radio
+        radio.closest('.option-item').classList.add('selected');
+    }
+
+    // Add pulse animation for low time
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
 
     setInterval(updateTimer, 1000);
     updateTimer(); // Initial call

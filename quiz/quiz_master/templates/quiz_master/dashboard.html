@@ -1,57 +1,74 @@
 {% extends 'quiz_master/base.html' %}
 
 {% block content %}
-<h2 style="margin-bottom: 2rem; color: var(--text-main);">Dashboard</h2>
+<div style="margin-bottom: 2rem;">
+    <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">Dashboard</h2>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">Welcome back, {{ user.username }}!</p>
+</div>
 
-<section style="margin-bottom: 3rem;">
-    <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Available Quizzes</h3>
+<section class="mb-4">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main);">Available Quizzes</h3>
+    </div>
+
     {% if quizzes %}
     <div class="grid">
         {% for quiz in quizzes %}
         <div class="card quiz-card">
-            <div class="card-header" style="border: none; padding-bottom: 0; margin-bottom: 1rem;">
-                <h3>{{ quiz.title }}</h3>
+            <div class="card-header">
+                <h3 class="card-title">{{ quiz.title }}</h3>
             </div>
-            <p>{{ quiz.description }}</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-primary" style="width: 100%;">Take Quiz</a>
+            <div style="flex: 1; display: flex; flex-direction: column;">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;">{{ quiz.description }}</p>
+                <div style="margin-top: auto;">
+                    <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-primary btn-block">
+                        Start Quiz <span style="margin-left: 0.5rem;">→</span>
+                    </a>
+                </div>
             </div>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <div class="alert alert-info" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;">
-        No quizzes available at the moment.
+    <div class="alert alert-info">
+        <span style="font-size: 1.5rem; margin-right: 1rem;">ℹ️</span>
+        <div>
+            <strong>No quizzes available right now.</strong>
+            <p style="margin-top: 0.25rem;">Check back later for new challenges!</p>
+        </div>
     </div>
     {% endif %}
 </section>
 
-<section>
-    <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Your Results</h3>
+<section class="mt-4">
+    <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem;">Recent Results</h3>
     {% if results %}
-    <div class="card" style="overflow-x: auto; padding: 0;">
-        <table style="margin: 0;">
+    <div class="table-container">
+        <table>
             <thead>
                 <tr>
-                    <th>Quiz</th>
+                    <th>Quiz Name</th>
                     <th>Score</th>
-                    <th>Date</th>
-                    <th>Action</th>
+                    <th>Date Taken</th>
+                    <th style="text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for result in results %}
                 <tr>
-                    <td style="font-weight: 500;">{{ result.quiz.title }}</td>
                     <td>
-                        <span
-                            style="background: #ecfdf5; color: #059669; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.875rem;">
+                        <div style="font-weight: 600;">{{ result.quiz.title }}</div>
+                    </td>
+                    <td>
+                        <span class="badge badge-success">
                             {{ result.score }} / {{ result.total_questions }}
                         </span>
                     </td>
                     <td style="color: var(--text-muted);">{{ result.date_taken|date:"M d, Y" }}</td>
-                    <td>
-                        <a href="{% url 'result_detail' result.id %}" class="btn btn-sm btn-outline-primary">Review</a>
+                    <td style="text-align: right;">
+                        <a href="{% url 'result_detail' result.id %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -59,7 +76,11 @@
         </table>
     </div>
     {% else %}
-    <p style="color: var(--text-muted);">You haven't taken any quizzes yet.</p>
+    <div
+        style="text-align: center; padding: 4rem; background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border);">
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">You haven't taken any quizzes yet.</p>
+        <a href="#available-quizzes" class="btn btn-secondary btn-sm">Browse Quizzes</a>
+    </div>
     {% endif %}
 </section>
 {% endblock %}
