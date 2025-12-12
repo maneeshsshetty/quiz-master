@@ -1,0 +1,80 @@
+{% extends 'quiz_master/base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="card"
+        style="margin-bottom: 2rem; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin-bottom: 0.5rem;">{{ quiz.title }}</h2>
+            <p style="color: var(--text-muted);">{{ quiz.description }}</p>
+        </div>
+        <div id="timer"
+            style="background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 999px; font-weight: 700; font-size: 1.1rem; box-shadow: var(--shadow);">
+            <span id="time-display">--:--</span>
+        </div>
+    </div>
+
+    <form method="post" id="quiz-form">
+        {% csrf_token %}
+        {% for question in quiz.questions.all %}
+        <div class="card question-card">
+            <div class="question-text">
+                <span style="color: var(--primary); margin-right: 0.5rem;">Q{{ forloop.counter }}.</span>
+                {{ question.text }}
+            </div>
+            <div class="options-list">
+                <label class="option-item">
+                    <input type="radio" name="{{ question.id }}" value="A" required>
+                    <span>{{ question.option_a }}</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="{{ question.id }}" value="B">
+                    <span>{{ question.option_b }}</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="{{ question.id }}" value="C">
+                    <span>{{ question.option_c }}</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="{{ question.id }}" value="D">
+                    <span>{{ question.option_d }}</span>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div
+            style="position: sticky; bottom: 2rem; background: var(--surface); padding: 1rem; border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--border); display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;">Submit
+                Quiz</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let timeLeft = parseInt("{{ time_left|stringformat:'d' }}");
+    const timerDisplay = document.getElementById('time-display');
+    const form = document.getElementById('quiz-form');
+
+    function updateTimer() {
+        if (timeLeft <= 0) {
+            form.submit();
+            return;
+        }
+
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = Math.floor(timeLeft % 60);
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        // Visual warning when time is low (less than 1 minute)
+        if (timeLeft < 60) {
+            document.getElementById('timer').style.backgroundColor = 'var(--error)';
+        }
+
+        timeLeft--;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call
+</script>
+{% endblock %}

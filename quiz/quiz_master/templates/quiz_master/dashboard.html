@@ -1,0 +1,65 @@
+{% extends 'quiz_master/base.html' %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem; color: var(--text-main);">Dashboard</h2>
+
+<section style="margin-bottom: 3rem;">
+    <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Available Quizzes</h3>
+    {% if quizzes %}
+    <div class="grid">
+        {% for quiz in quizzes %}
+        <div class="card quiz-card">
+            <div class="card-header" style="border: none; padding-bottom: 0; margin-bottom: 1rem;">
+                <h3>{{ quiz.title }}</h3>
+            </div>
+            <p>{{ quiz.description }}</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-primary" style="width: 100%;">Take Quiz</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;">
+        No quizzes available at the moment.
+    </div>
+    {% endif %}
+</section>
+
+<section>
+    <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Your Results</h3>
+    {% if results %}
+    <div class="card" style="overflow-x: auto; padding: 0;">
+        <table style="margin: 0;">
+            <thead>
+                <tr>
+                    <th>Quiz</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td style="font-weight: 500;">{{ result.quiz.title }}</td>
+                    <td>
+                        <span
+                            style="background: #ecfdf5; color: #059669; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.875rem;">
+                            {{ result.score }} / {{ result.total_questions }}
+                        </span>
+                    </td>
+                    <td style="color: var(--text-muted);">{{ result.date_taken|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="{% url 'result_detail' result.id %}" class="btn btn-sm btn-outline-primary">Review</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p style="color: var(--text-muted);">You haven't taken any quizzes yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

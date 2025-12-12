@@ -1,0 +1,5 @@
+venv/
+gb.sqlite3
+quiz/quiz_master/__pycache__/
+quiz/quiz_master/migrations/__pycache__/
+quiz/.env

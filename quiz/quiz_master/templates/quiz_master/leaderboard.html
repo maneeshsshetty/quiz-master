@@ -1,0 +1,40 @@
+{% extends 'quiz_master/base.html' %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem; color: var(--text-main);">Global Leaderboard</h2>
+
+<div class="card" style="overflow-x: auto; padding: 0;">
+    <table style="margin: 0;">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Quizzes Taken</th>
+                <th>Total Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in leaderboard_users %}
+            <tr>
+                <td>
+                    {% if forloop.counter == 1 %}🥇{% endif %}
+                    {% if forloop.counter == 2 %}🥈{% endif %}
+                    {% if forloop.counter == 3 %}🥉{% endif %}
+                    <span style="font-weight: 600;">#{{ forloop.counter }}</span>
+                </td>
+                <td>
+                    <div style="font-weight: 500;">{{ user.username }}</div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted);">{{ user.email }}</div>
+                </td>
+                <td>{{ user.quizzes_taken }}</td>
+                <td>
+                    <span style="font-size: 1.1rem; font-weight: 700; color: var(--primary);">
+                        {{ user.total_score }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

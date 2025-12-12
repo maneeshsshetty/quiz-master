@@ -1,0 +1,67 @@
+{% extends 'quiz_master/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h2>{{ result.quiz.title }} - Review</h2>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5>Attempted by: {{ result.user.username }}</h5>
+                <p>Date: {{ result.date_taken|date:"M d, Y H:i" }}</p>
+            </div>
+            <div class="col-md-6 text-right">
+                <h4>Score: {{ result.score }} / {{ result.total_questions }}</h4>
+            </div>
+        </div>
+
+        <hr>
+
+        {% for answer in result.answers.all %}
+        <div class="card mb-3 {% if answer.is_correct %}border-success{% else %}border-danger{% endif %}">
+            <div class="card-body">
+                <h5 class="card-title">Q{{ forloop.counter }}: {{ answer.question.text }}</h5>
+
+                <ul class="list-group list-group-flush">
+                    <li
+                        class="list-group-item {% if answer.selected_option == 'A' %}{% if answer.question.correct_option == 'A' %}list-group-item-success{% else %}list-group-item-danger{% endif %}{% elif answer.question.correct_option == 'A' %}list-group-item-success{% endif %}">
+                        A: {{ answer.question.option_a }}
+                        {% if answer.question.correct_option == 'A' %} (Correct) {% endif %}
+                        {% if answer.selected_option == 'A' %} (Selected) {% endif %}
+                    </li>
+                    <li
+                        class="list-group-item {% if answer.selected_option == 'B' %}{% if answer.question.correct_option == 'B' %}list-group-item-success{% else %}list-group-item-danger{% endif %}{% elif answer.question.correct_option == 'B' %}list-group-item-success{% endif %}">
+                        B: {{ answer.question.option_b }}
+                        {% if answer.question.correct_option == 'B' %} (Correct) {% endif %}
+                        {% if answer.selected_option == 'B' %} (Selected) {% endif %}
+                    </li>
+                    <li
+                        class="list-group-item {% if answer.selected_option == 'C' %}{% if answer.question.correct_option == 'C' %}list-group-item-success{% else %}list-group-item-danger{% endif %}{% elif answer.question.correct_option == 'C' %}list-group-item-success{% endif %}">
+                        C: {{ answer.question.option_c }}
+                        {% if answer.question.correct_option == 'C' %} (Correct) {% endif %}
+                        {% if answer.selected_option == 'C' %} (Selected) {% endif %}
+                    </li>
+                    <li
+                        class="list-group-item {% if answer.selected_option == 'D' %}{% if answer.question.correct_option == 'D' %}list-group-item-success{% else %}list-group-item-danger{% endif %}{% elif answer.question.correct_option == 'D' %}list-group-item-success{% endif %}">
+                        D: {{ answer.question.option_d }}
+                        {% if answer.question.correct_option == 'D' %} (Correct) {% endif %}
+                        {% if answer.selected_option == 'D' %} (Selected) {% endif %}
+                    </li>
+                </ul>
+
+                {% if not answer.is_correct %}
+                <div class="alert alert-warning mt-2">
+                    Correct Answer: Option {{ answer.question.correct_option }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="mt-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
